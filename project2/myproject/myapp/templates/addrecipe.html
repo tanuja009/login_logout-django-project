@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Recipe</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.1/css/bootstrap.min.css">
+    <style>
+body {
+  background-color: #f8f9fa;
+}
+
+.container {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+}
+
+.form-control {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+}
+    </style>
+    
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+
+    
+    <div class="col-5 mt-5">
+      <h2 class="text-center mb-4">Add a New Recipe</h2>
+      <form method="Post">
+        {% csrf_token %}
+          <div class="mb-3">
+              <label for="recipeName" class="form-label">Recipe Name</label>
+              <input type="text" class="form-control" id="recipeName" name="recipe name" placeholder="Enter recipe name">
+          </div>
+        </br>
+          <div class="mb-3">
+              <label for="ingredients" class="form-label">Description</label>
+              <textarea class="form-control" id="ingredients" placeholder="List the ingredients" name="Description"></textarea>
+          </div>
+        </br>
+          <div class="mb-3">
+              <label for="recipeImage" class="form-label">Recipe Image</label>
+              <input class="form-control" type="file" id="recipeImage" name="image">
+          </div>
+        </br>
+         
+        <button type="submit" class="btn btn-primary">Submit Recipe</button>
+      </form>
+  </div>
+
+</div>
+</div>
+  
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
