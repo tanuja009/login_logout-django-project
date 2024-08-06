@@ -46,30 +46,21 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">Count</th>
+            <th scope="col">Name</th>
+            <th scope="col">Recipe Description</th>
+            <th scope="col">Dish Image</th>
           </tr>
         </thead>
         <tbody>
+          {% for i in sdata %}
           <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <th scope="row">{{i.id}}</th>
+            <td>{{i.recipe_name}}</td>
+            <td>{{i.recipe_description}}</td>
+            <td><img src="{{ i.recipe_image.url }}" alt="Image" style="width:100px; height:auto;"></td>
           </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
+        {% endfor %}
         </tbody>
       </table>
     </div>
