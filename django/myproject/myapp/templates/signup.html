@@ -150,14 +150,45 @@ button{
         <input type="email" placeholder="Email or Phone" name="email" id="email">
 
         <label for="password1">Password</label>
-        <input type="password" placeholder="Password" id="password1" name="password1">
+        <input onclick="getelement()" type="password" placeholder="Password" id="password1" name="password1">
 
 
         <label for="password2">Confrom Password</label>
-        <input type="password" placeholder="Confrom Password" id="password2" name="password2">
+        <input onclick="getelement()"  type="password" placeholder="Confrom Password" id="password2" name="password2">
+        <span id="error" class="error"></span><br><br>
         <button type="submit">Signup</button>
         
         <a href="{% url 'login' %}" >i have already account</a>
     </form>
 </body>
+<script>
+    {% comment %} function getelement(){
+         const a=document.getElementById('password1');
+         const b=document.getElementById('password2');
+         if (a!=b){
+            alert("password is not mathched");
+         }
+         else{
+            alert("login successfully");
+         }
+    } {% endcomment %}
+     // Get the password and confirm password fields
+const password = document.getElementById('password1');
+const confirmPassword = document.getElementById('password2');
+const error = document.getElementById('error');
+
+// Function to check if passwords match
+function validatePasswords() {
+    if (password.value !== confirmPassword.value) {
+        error.textContent = 'Passwords do not match!';
+    } else {
+        error.textContent = '';
+    }
+}
+
+// Add event listeners to both fields
+password1.addEventListener('input', validatePasswords);
+Password2.addEventListener('input', validatePasswords);
+
+</script>
 </html>
