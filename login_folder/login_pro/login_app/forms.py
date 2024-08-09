@@ -7,7 +7,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ['username','contact','email','password']
+        fields = ['name','contact','email','password']
 
     
     def clean_email(self):
