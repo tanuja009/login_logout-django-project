@@ -1,0 +1,116 @@
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Form Example</title>
+    <!-- Bootstrap CSS (Optional) -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- Optional Custom CSS -->
+    <style>
+      .container {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Student</h1>
+      {% comment %} <form  method="post"> {% endcomment %}
+        <!-- CSRF Token for security (Django specific) -->
+        {% comment %} {% csrf_token %} 
+        {% if form.non_field_errors %}
+        <div class="errors">
+          <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %} 
+        
+        {{form.as_p}}  {% endcomment %}
+
+        <form method="post" action="{% url 'add' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {% if form.errors %}
+                <div class="errors">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+       
+
+
+
+        {% comment %} <div>
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error">
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <button type="submit">Submit</button> {% endcomment %}
+
+
+
+        {% comment %}
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" name="name" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" name="email" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <textarea
+            name="address"
+            class="form-control"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="contact">Contact:</label>
+          <input type="tel" name="contact" class="form-control" required />
+        </div>
+        {% endcomment %}
+
+        
+      {% comment %} </form>
+    </div> {% endcomment %}
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
