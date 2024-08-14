@@ -76,12 +76,13 @@ TEMPLATES = [
 ]
 
 # settings.py
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
+STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
 
 # Optional: Directory where static files will be collected during deployment
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",
+# ]
 
 # Optional: Directory where collected static files will be stored
 STATIC_ROOT = BASE_DIR / "staticfiles"

@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class UserForm(forms.ModelForm):
     class Meta:
-        model = data  # Replace with your actual model
+        model = data # Replace with your actual model
         fields = ['email', 'password', 'confirm_password']
         widgets = {
             'email': forms.EmailInput(attrs={'class': 'form-control'}),

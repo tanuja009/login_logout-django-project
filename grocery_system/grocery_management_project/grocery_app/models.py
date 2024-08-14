@@ -17,6 +17,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product/')
     description = models.TextField()
     price = models.FloatField()
+    carousal_image=models.ImageField(upload_to='product/',default='photo')
 
     def __str__(self):
         return self.product_name
