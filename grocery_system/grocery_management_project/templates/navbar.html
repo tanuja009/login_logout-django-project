@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block navbar %}
+<nav>
+    <div class="menu-icon">
+     <img src="https://marketplace.canva.com/EAFzje8Pffo/1/0/1600w/canva-colorful-illustrative-organic-grocery-online-shop-logo-Alka_dqR_gQ.jpg" alt="grocery"/>
+    </div>
+    <div class="logo">
+      
+    </div>
+    <div class="nav-items">
+       <li><a href="{% url 'home'%}">Home</a></li>
+       <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <strong>Categories</strong>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+             {% for category in categories %}
+             <li><a class="dropdown-item" href="#">{{ category.name }}</a></li>
+             {% empty %}
+             <li><a class="dropdown-item" href="#">No categories available</a></li>
+             {% endfor %}
+         </ul>
+      </li>
+      
+       
+       <li ><a href="{% url 'About'%}" style="color:white">About Us</a></li>
+      
+       <li><a href="#">Contact Us</a></li>
+    </div>
+    <div class="search-icon">
+       <span class="fas fa-search"></span>
+    </div>
+    <div class="cancel-icon">
+       <span class="fas fa-times"></span>
+    </div>
+    <form action="#">
+       <input type="search" class="search-data" placeholder="Search" required>
+       <button type="submit" class="fas fa-search"></button>
+    </form>
+    <a href="{% url 'login'%}"><button class="btn btn-success">Login</button>
+       <a href="{% url 'signup'%}"><button class="btn btn-success">Logout</button>
+ </nav>
+{% endblock %}
+
+
+

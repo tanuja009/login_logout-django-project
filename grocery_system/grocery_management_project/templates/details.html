@@ -1,0 +1,21 @@
+<!-- product_detail.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ item.product_name }}</title>
+</head>
+<body>
+    <div style="display:flex;justify-content:center;align-item:center">
+    <div style="height: 400px; width: 400px;">
+    <h1 style="border-bottom:solid 1px black">{{ item.product_name }}</h1>
+    <img src="{{ item.image.url }}" alt="{{ product.product_name }}" style="height: 400px; width: 400px;border:none">
+
+    <h4 style="text-align:center">{{ item.description }}</h4>
+    <p style="text-align:center">Price: ${{ item.price }}</p>
+    <!-- Add any other product fields as needed -->
+    </div>
+</div>
+</body>
+</html>

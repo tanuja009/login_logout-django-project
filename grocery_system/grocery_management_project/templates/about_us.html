@@ -1,16 +1,25 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+    <link rel="stylesheet" href="{% static 'my_app/css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
+    {% comment %} <style>
+      .carousel-item img {
+          object-fit: cover;
+          height: 400px; /* Adjust height as needed */
+      }
+  </style> {% endcomment %}
+</head>
   <body>
     <nav>
-        <div class="menu-icon">
-         <img src="https://marketplace.canva.com/EAFzje8Pffo/1/0/1600w/canva-colorful-illustrative-organic-grocery-online-shop-logo-Alka_dqR_gQ.jpg" alt="grocery"/>
-        </div>
+        
         <div class="logo">
            Grocery
         </div>
@@ -18,12 +27,12 @@
            <li><a href="{% url 'home'%}">Home</a></li>
            <li>
              <a>
-               <select id="category" name="category" style="background-color:black;color:white">
-                 <option value="electronics">Category</option>
-                   <option value="electronics">Electronics</option>
-                   <option value="clothing">Clothing</option>
-                   <option value="home_appliances">Home Appliances</option>
-                   <option value="books">Books</option>
+               <select id="category" name="category" style="background-color:black;color:white;text-decoration:none">
+                 <option value="electronics">Fruits</option>
+                   <option value="electronics">Vegetables</option>
+                   <option value="clothing">All Grocery</option>
+                   <option value="home_appliances">Dry Frits</option>
+                   <option value="books">Sweets</option>
                </select>
              </a>
            </li>

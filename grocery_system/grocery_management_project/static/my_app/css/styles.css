@@ -258,7 +258,7 @@ nav .logo.space{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     overflow: hidden; /* Ensure image does not overflow card */
     width: 200px; /* Fixed width for cards */
-    height: 350px;
+    height: 200px;
     text-align: center; /* Center text */
 }
 

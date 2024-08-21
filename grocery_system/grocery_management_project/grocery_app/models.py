@@ -10,7 +10,11 @@ class data(models.Model):
     def __str__(self):
         return self.username
 
-
+class category(models.Model):
+    name=models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
 
 class Product(models.Model):
     product_name = models.CharField(max_length=100)
@@ -18,8 +22,12 @@ class Product(models.Model):
     description = models.TextField()
     price = models.FloatField()
     carousal_image=models.ImageField(upload_to='product/',default='photo')
+    category=models.ForeignKey(category,on_delete=models.CASCADE,default="fruits")
 
     def __str__(self):
         return self.product_name
+    
+
+
 
 

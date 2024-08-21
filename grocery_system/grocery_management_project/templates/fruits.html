@@ -57,12 +57,9 @@
 
 </head>
 <body>
-   <div style="">
-  <a href="#"> <i cl ss="fas fa-home"></i> Home</a>
-  <a href="#" >  <i class="fab fa-github"></i> GitHub</a>
-  <a href="#">  <i class="fa-brands fa-square-instagram"></i>Instagram</a>
-  <a href="#">  <i class="fa-brands fa-facebook"></i>Facebook</a>
-   </div>
+   <i class="fas fa-home"></i> Home
+   <i class="fab fa-github"></i> GitHub
+
       <nav>
          <div class="menu-icon">
           <img src="https://marketplace.canva.com/EAFzje8Pffo/1/0/1600w/canva-colorful-illustrative-organic-grocery-online-shop-logo-Alka_dqR_gQ.jpg" alt="grocery"/>
@@ -87,7 +84,7 @@
            <div class="dropdown">
             <a href="#" class="nav-item">Category <i class="fa fa-caret-down"></i></a>
             <div class="dropdown-content">
-               {% for i in categories %}
+               {% for i in cate %}
                <li><a href="{% url 'read' i.id %}">{{ i.name }}</a></li>
 
                 {% endfor %}
@@ -116,27 +113,23 @@
      
       
  
+      
       <div class="product-grid pt-5">
-        {% for product in products %}
+        {% for product in data %}
         <div class="product-card">
             <img src="{{ product.image.url }}" alt="{{ product.product_name }}">
             <div class="product-info">
-               <a href="{% url 'product_details' product.id %}">
-
                 <p class="product-name">{{ product.product_name }}</p>
-               </a>
-                
                 <p class="product-description">{{ product.description }}</p>
                 <p class="product-price">${{ product.price }}</p> 
             </div>
-           <a href="{% url 'card_read' product.id %}"><button type="submit" class="btn btn-primary">Add to Cart</button></a>
+            <button type="submit" class="btn btn-primary">Add to Cart</button>
         </div>
         {% endfor %}
         <!-- Repeat for other products -->
        
     </div>
 
-  
     <script src="{% static 'my_app/js/script.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
