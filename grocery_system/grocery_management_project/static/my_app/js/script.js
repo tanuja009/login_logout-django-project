@@ -24,3 +24,17 @@ searchBtn.onclick = ()=>{
   cancelBtn.classList.add("show");
 }
 
+
+let currentSlide = 0;
+
+function moveSlide(step) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const totalSlides = slides.length;
+    currentSlide = (currentSlide + step + totalSlides) % totalSlides;
+    const offset = -currentSlide * 100;
+    document.querySelector('.carousel-wrapper').style.transform = `translateX(${offset}%)`;
+}
+
+// Optional: Auto-slide functionality
+setInterval(() => moveSlide(1), 3000); // Move to the next slide every 3 seconds
+

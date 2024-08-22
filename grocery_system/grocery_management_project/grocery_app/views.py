@@ -46,6 +46,7 @@ def SignupPage(request):
 
             my_user=User.objects.create_user(uname,email,pass1)
             my_user.save()
+        
             return redirect('login')
         
 
@@ -96,10 +97,15 @@ def LoginPage(request):
 def home(request):
   products =Product.objects.all()
   data=category.objects.all()
+  images = [
+        "https://cdn.pixabay.com/photo/2022/08/01/07/59/vegetables-7357585_640.png",
+        "https://5.imimg.com/data5/MG/FQ/SA/SELLER-283756/all-fmcg-grocery-products.jpg",
+        "https://media.istockphoto.com/id/171302954/photo/groceries.jpg?s=612x612&w=0&k=20&c=D3MmhT5DafwimcYyxCYXqXMxr1W25wZnyUf4PF1RYw8="
+    ]
  
 
-  carousal_image=Product.objects.values_list('carousal_image', flat=True)
-  return render(request,"home.html",{'products':products,'categories':data})
+#   carousal_image=Product.objects.values_list('carousal_image', flat=True)
+  return render(request,"home.html",{'products':products,'categories':data,'images':images})
 
 
 def About(request):
@@ -121,25 +127,69 @@ def Add_Product(request):
 # def About(request):
 #     return render(request,"about_us.html")
 
-@login_required(login_url='login_view')
+@login_required(login_url='login')
 def logout_view(request):
     logout(request)
-    return redirect('login_view')
+    return redirect('login')
 
 def read_cat(request,id):
     category1=category.objects.get(id=id)
-    product=get_object_or_404(Product,category=category1)
+    product=Product.objects.filter(category=category1)
     cate=category.objects.all()
     return render(request,"fruits.html",{'data':product,'cate':cate})
 
 def product_details(request, id):
     item = get_object_or_404(Product, id=id)
-    return render(request, "details.html", {'item': item}) 
+    return render(request, "details.html", {'item': item})
+
+def product_search(request):
+    query = request.GET.get('q')
+    if query:
+        products = Product.objects.filter(product_name__icontains=query)
+    else:
+        products = Product.objects.all()
+    return render(request, 'search.html', {'products': products, 'query': query})
+
+@login_required(login_url='login')
+def profile(request):
+    try:
+        # Use `request.user` directly since it's already a User instance.
+        user = request.user
+        # Use `get_object_or_404` to handle cases where the user might not be found.
+        profile = get_object_or_404(User, username=user.username)
+        return render(request, 'profile.html', {'profile': profile})
+    except User.DoesNotExist:
+        return HttpResponse("Profile not found", status=404)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {str(e)}", status=500)
+    
+@login_required(login_url='login')
+def Add_cart(request,id):
+    username=request.user
+    product=get_object_or_404(Product,id=id)
+    user1=User.objects.filter(email=username.email).first()
+    print(user1)
+    cart_item, created = CartItem.objects.get_or_create(product=product,user=user1)
+
+    if not created:
+        CartItem.quantity=CartItem.quantity+1
+    else:
+        CartItem.quantity=1
+
+    return redirect('home')
 
 
-def card_read(request,id):
-    item=Product.objects.filter(id=id)
-    user=User.objects.all()
+def cart_view(request):
+    items=CartItem.objects.all()
+    total_price = sum(item.product.price * item.quantity for item in items)   
+    return render(request, 'cart.html', {'items': items, 'total_price': total_price}) 
+
+
+
+
+
+
+
 
 
 

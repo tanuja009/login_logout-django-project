@@ -257,8 +257,8 @@ nav .logo.space{
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     overflow: hidden; /* Ensure image does not overflow card */
-    width: 200px; /* Fixed width for cards */
-    height: 200px;
+    width: 600px; /* Fixed width for cards */
+    height: 600px;
     text-align: center; /* Center text */
 }
 
@@ -292,7 +292,7 @@ nav .logo.space{
 .product-card .product-price {
     /* font-size: 1.2em; */
     font-size: 10px;
-    color: #333;
+    color: rgb(56, 56, 56);
     margin-top: 8px;
 }
  /* Optional: CSS to style the div and image */
@@ -309,6 +309,61 @@ nav .logo.space{
   max-width: 100%; /* Make sure the image fits within the container */
   height: auto; /* Maintain the image aspect ratio */
 }
+.icon{
+  color:grey;
+  text-decoration:none;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  overflow: hidden;
+  border: 2px solid #ddd;
+  background-color: #f1f1f1;
+}
+
+.carousel-wrapper {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  border-radius: 3px;
+  user-select: none;
+}
+
+.carousel-button.prev {
+  left: 0;
+}
+
+.carousel-button.next {
+  right: 0;
+}
+
 
 
 
