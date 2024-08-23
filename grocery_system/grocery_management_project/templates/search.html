@@ -33,46 +33,43 @@
                  
                </div>
                <div class="nav-items">
-                  <li><a href="{% url 'home' %}">Home</a></li>
-                  {% comment %} <li class="nav-item dropdown">
-                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                         <strong>Categories</strong>
-                     </a>
-                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {% for category in categories %}
-                        <li><a class="dropdown-item" href="#">{{ category.name }}</a></li>
-                        {% empty %}
-                        <li><a class="dropdown-item" href="#">No categories available</a></li>
-                        {% endfor %}
-                    </ul>
-                 </li> {% endcomment %}
-                 <div class="dropdown">
-                  <a href="#" class="nav-item">Category <i class="fa fa-caret-down"></i></a>
-                  <div class="dropdown-content">
-                     {% for i in categories %}
-                     <li><a href="{% url 'read' i.id %}">{{ i.name }}</a></li>
-      
-                      {% endfor %}
-                  </div>
-              </div>
-                 
-                 
-                  
-                  <li ><a href="{% url 'About'%}">About Us</a></li>
-                 
-                  <li><a href="#">Contact Us</a></li>
-               </div>
-               <div class="search-icon">
-                  <span class="fas fa-search"></span>
-               </div>
-               <div class="cancel-icon">
-                  <span class="fas fa-times"></span>
-               </div>
-               <form method="GET" action="{% url 'product_search' %}">
-                  <input type="text" name="q" placeholder="Search products...">
-                  <button type="submit">Search</button>
-              </form>
-              
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'home' %}">Home</a></li> 
+                <div class="dropdown">
+                <a href="#" class="nav-item">Category <i class="fa fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                   {% for i in categories %}
+                   <li><a href="{% url 'read' i.id %}">{{ i.name }}</a></li>
+    
+                    {% endfor %}
+                </div>
+                </div>
+                <li ><a href="{% url 'About'%}">About Us</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="{% url 'profile' %}">User Profile</a></li>
+                <li><a href="{% url 'cart_view' %}">Cart</a></li>
+               <li> <a href="{% url 'logout_view'%}">Logout</a></li>
+    
+             </div>
+             <div class="search-icon">
+                <span class="fas fa-search"></span>
+             </div>
+             <div class="cancel-icon">
+                <span class="fas fa-times"></span>
+             </div>
+             <form method="GET" action="{% url 'product_search' %}">
+                <input type="text" name="q" placeholder="Search products...">
+                <button type="submit">Search</button>
+            </form>
+            {% else %}
+        
+            <ul style="display: flex; justify-content: space-between; align-items: center; list-style: none; padding: 0; margin: 0;">
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'signup' %}">Sign Up</a></li>
+            </ul>
+            
+            
+            {% endif %}
             </nav>
            
     <h1 style="text-align:center">Search Results</h1>
@@ -90,7 +87,7 @@
                     <p class="product-description">{{ product.description }}</p>
                     <p class="product-price">${{ product.price }}</p> 
                 </div>
-               <a href="{% url 'card_read' product.id %}"><button type="submit" class="btn btn-primary">Add to Cart</button></a>
+               <a href="{% url 'Add_cart' product.id %}"><button type="submit" class="btn btn-primary">Add to Cart</button></a>
             </div> 
             {% endfor %}
         </ul>

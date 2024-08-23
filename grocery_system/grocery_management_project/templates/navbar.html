@@ -8,37 +8,43 @@
       
     </div>
     <div class="nav-items">
-       <li><a href="{% url 'home'%}">Home</a></li>
-       <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <strong>Categories</strong>
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-             {% for category in categories %}
-             <li><a class="dropdown-item" href="#">{{ category.name }}</a></li>
-             {% empty %}
-             <li><a class="dropdown-item" href="#">No categories available</a></li>
-             {% endfor %}
-         </ul>
-      </li>
-      
-       
-       <li ><a href="{% url 'About'%}" style="color:white">About Us</a></li>
-      
-       <li><a href="#">Contact Us</a></li>
-    </div>
-    <div class="search-icon">
-       <span class="fas fa-search"></span>
-    </div>
-    <div class="cancel-icon">
-       <span class="fas fa-times"></span>
-    </div>
-    <form action="#">
-       <input type="search" class="search-data" placeholder="Search" required>
-       <button type="submit" class="fas fa-search"></button>
-    </form>
-    <a href="{% url 'login'%}"><button class="btn btn-success">Login</button>
-       <a href="{% url 'signup'%}"><button class="btn btn-success">Logout</button>
+      {% if user.is_authenticated %}
+      <li><a href="{% url 'home' %}">Home</a></li> 
+      <div class="dropdown">
+      <a href="#" class="nav-item">Category <i class="fa fa-caret-down"></i></a>
+      <div class="dropdown-content">
+         {% for i in categories %}
+         <li><a href="{% url 'read' i.id %}">{{ i.name }}</a></li>
+
+          {% endfor %}
+      </div>
+      </div>
+      <li ><a href="{% url 'About'%}">About Us</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="{% url 'profile' %}">User Profile</a></li>
+      <li><a href="{% url 'cart_view' %}">Cart</a></li>
+     <li> <a href="{% url 'logout_view'%}">Logout</a></li>
+
+   </div>
+   <div class="search-icon">
+      <span class="fas fa-search"></span>
+   </div>
+   <div class="cancel-icon">
+      <span class="fas fa-times"></span>
+   </div>
+   <form method="GET" action="{% url 'product_search' %}">
+      <input type="text" name="q" placeholder="Search products...">
+      <button type="submit">Search</button>
+  </form>
+  {% else %}
+
+  <ul style="display: flex; justify-content: space-between; align-items: center; list-style: none; padding: 0; margin: 0;">
+      <li><a href="{% url 'login' %}">Login</a></li>
+      <li><a href="{% url 'signup' %}">Sign Up</a></li>
+  </ul>
+  
+  
+  {% endif %}
  </nav>
 {% endblock %}
 

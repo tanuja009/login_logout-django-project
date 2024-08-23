@@ -38,8 +38,16 @@ class CartItem(models.Model):
     ordered=models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.product.name} ({self.quantity})"
+        return self.product.product_name
 
+class Order(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    product=models.ForeignKey(Product,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    # Add more fields as needed (e.g., status, payment info)
+
+    def __str__(self):
+        return self.product.product_name
     
 
 

@@ -167,32 +167,70 @@ def profile(request):
 def Add_cart(request,id):
     username=request.user
     product=get_object_or_404(Product,id=id)
+    print(product)
     user1=User.objects.filter(email=username.email).first()
-    print(user1)
     cart_item, created = CartItem.objects.get_or_create(product=product,user=user1)
 
     if not created:
-        CartItem.quantity=CartItem.quantity+1
+        cart_item.quantity += 1
     else:
-        CartItem.quantity=1
-
+        cart_item.quantity=1
+    cart_item.save()
     return redirect('home')
 
 
 def cart_view(request):
-    items=CartItem.objects.all()
-    total_price = sum(item.product.price * item.quantity for item in items)   
+    username=request.user
+    items=CartItem.objects.filter(user=username)
+    total_price = sum(item.product.price * item.quantity for item in items)  
     return render(request, 'cart.html', {'items': items, 'total_price': total_price}) 
 
+@login_required(login_url="user_login")
+def edit_profile(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        print("Email is:", email)
+        update_data = User.objects.get(email=email)
+        print("Update data :", update_data)
+        update_data.username = username
+        update_data.save()
+        return redirect("profile")
+
+    else:
+        username = request.user
+        app_user = User.objects.get(username=username)
+        category1= category.objects.all()
+        return render(request, "edit_profile.html", {"profile": app_user,'categories':category1})
 
 
+def Delete(request,id):
+    user=User.objects.get(id=id)
+    user.delete()
+    return redirect('home')
 
+def order_confirm(request, id):
+    user=request.user
+    order = get_object_or_404(Product, id=id)
+    print(data)
+    # Fetch the order or product based on the order_id
+    # order, created = Order.objects.get_or_create(
+    #     id=id,
+    #     user=request.user,
+    # )
+    
+    # # Fetch the product related to this order
+    # product = order.product
+    
+    return render(request, 'order_confirm.html', {'data': order})
 
+def order(request,id):
+    user=request.user
+    order = get_object_or_404(Product, id=id)
+    item= CartItem.objects.get_or_create(product=order,user=user)
+    shipping_charge=70
+    total_price=order.price + shipping_charge
+    return render(request,'proceed_payment.html',{'item':item,'total_price':total_price,"shipping_charge":shipping_charge})
+    
 
-
-
-
-
-
-
-
+    
