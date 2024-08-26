@@ -98,7 +98,7 @@
             <li ><a href="{% url 'About'%}">About Us</a></li>
             <li><a href="#">Contact Us</a></li>
             <li><a href="{% url 'profile' %}">User Profile</a></li>
-            <li><a href="{% url 'cart_view' %}">Cart</a></li>
+            {% comment %} <li><a href="{% url 'cart_view' %}">Cart</a></li> {% endcomment %}
            <li> <a href="{% url 'logout_view'%}">Logout</a></li>
 
          </div>
@@ -154,8 +154,13 @@
         </tbody>
     </table>
     <h2>Total: {{ total_price }}</h2>
-    <a href="#" class="btn btn-success">Proceed to Checkout</a>
-
+    <center>
+        <form action="{% url 'payment' 'id=none' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" id="checkout-button">Proceed to checkout</button>
+          </form>
+    
+    </center>
 </center>
 
 

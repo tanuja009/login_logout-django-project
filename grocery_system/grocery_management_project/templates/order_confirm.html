@@ -90,7 +90,7 @@
             <li ><a href="{% url 'About'%}">About Us</a></li>
             <li><a href="#">Contact Us</a></li>
             <li><a href="{% url 'profile' %}">User Profile</a></li>
-            <li><a href="{% url 'cart_view' %}">Cart</a></li>
+            {% comment %} <li><a href="{% url 'cart_view' %}">Cart</a></li> {% endcomment %}
            <li> <a href="{% url 'logout_view'%}">Logout</a></li>
 
          </div>
@@ -118,12 +118,15 @@
 
         <div style="display:flex;justify-content:center;align-item:center">
             <div style="height: 400px; width: 400px;">
-            <h1 style="border-bottom:solid 1px black">{{ data.product_name }}</h1>
-            <img src="{{ data.image.url }}" alt="{{ data.product_name }}" style="height: 400px; width: 400px;border:none">
+            <h1 style="border-bottom:solid 1px black;text-align:center">{{ data.product_name }}</h1>
+            <center><img src="{{ data.image.url }}" alt="{{ data.product_name }}" style="height: 200px; width: 200px;border:none"></center>
         
             <h4 style="text-align:center">{{ data.description }}</h4>
             <p style="text-align:center">Price: ${{ data.price }}</p>
-            <center><a href="{% url 'order' data.id %}" class="btn btn-success">Confirm order</a></center>
+            <center><a href="{% url 'order' data.id %}" class="btn btn-success"  id="alertButton">Confirm order</a>
+                <a href="{% url 'home'%}" class="btn btn-danger" id="alertButton1">cancel</a>
+            </center>
+
             
             
             </div> 
@@ -145,5 +148,20 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Get the button element
+        const alertButton = document.getElementById('alertButton');
+        const alertButton1 = document.getElementById('alertButton1');
+
+        // Add an event listener to the button
+        alertButton.addEventListener('click', function() {
+            // Show the alert popup
+            alert('Order Successfully');
+        });
+        alertButton1.addEventListener('click', function() {
+            // Show the alert popup
+            alert('Are You Sure For Cancle Your Order');
+        });
+    </script>
 </body>
 </html>

@@ -87,7 +87,7 @@
            <li ><a href="{% url 'About'%}">About Us</a></li>
            <li><a href="#">Contact Us</a></li>
            <li><a href="{% url 'profile' %}">User Profile</a></li>
-           <li><a href="{% url 'cart_view' %}">Cart</a></li>
+           {% comment %} <li><a href="{% url 'cart_view' %}">Cart</a></li> {% endcomment %}
           <li> <a href="{% url 'logout_view'%}">Logout</a></li>
 
         </div>
@@ -115,14 +115,15 @@
 
     <div style="display:flex;justify-content:center;align-item:center">
     <div style="height: 400px; width: 400px;">
-    <h1 style="border-bottom:solid 1px black">{{ item.product_name }}</h1>
-    <img src="{{ item.image.url }}" alt="{{ product.product_name }}" style="height: 400px; width: 400px;border:none">
+    <h1 style="border-bottom:solid 1px black;text-align:center">{{ item.product_name }}</h1>
+    <center><img src="{{ item.image.url }}" alt="{{ product.product_name }}" style="height: 200px; width: 200px;border:none"></center>
 
     <h4 style="text-align:center">{{ item.description }}</h4>
     <p style="text-align:center">Price: ${{ item.price }}</p>
-    
-    <center><a href="{% url 'order_confirm' item.id %}" class="btn btn-success">Buy Now</a></center>
-    
+    <center>
+    <a href="{% url 'order_confirm' item.id %}" class="btn btn-success">Buy Now</a>
+    <a href="{% url 'Add_cart' item.id %}"><button type="submit" class="btn btn-primary">Add to Cart</button></a>
+    </center>
     </div> 
 </div>
 </body>

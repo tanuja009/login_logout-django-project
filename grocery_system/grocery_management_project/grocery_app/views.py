@@ -7,6 +7,14 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
 from .models import *
 from django.contrib.auth.models import User
+import stripe
+from django.conf import settings
+from django.http import JsonResponse
+
+
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # def login_view(request):
 #     if request.method == 'POST':
@@ -176,16 +184,19 @@ def Add_cart(request,id):
     else:
         cart_item.quantity=1
     cart_item.save()
-    return redirect('home')
-
-
-def cart_view(request):
-    username=request.user
     items=CartItem.objects.filter(user=username)
     total_price = sum(item.product.price * item.quantity for item in items)  
     return render(request, 'cart.html', {'items': items, 'total_price': total_price}) 
+    
 
-@login_required(login_url="user_login")
+
+# def cart_view(request):
+#     username=request.user
+#     items=CartItem.objects.filter(user=username)
+#     total_price = sum(item.product.price * item.quantity for item in items)  
+#     return render(request, 'cart.html', {'items': items, 'total_price': total_price}) 
+
+@login_required(login_url="login")
 def edit_profile(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -203,12 +214,13 @@ def edit_profile(request):
         category1= category.objects.all()
         return render(request, "edit_profile.html", {"profile": app_user,'categories':category1})
 
-
+@login_required(login_url="login")
 def Delete(request,id):
     user=User.objects.get(id=id)
     user.delete()
     return redirect('home')
 
+@login_required(login_url="login")
 def order_confirm(request, id):
     user=request.user
     order = get_object_or_404(Product, id=id)
@@ -223,14 +235,78 @@ def order_confirm(request, id):
     # product = order.product
     
     return render(request, 'order_confirm.html', {'data': order})
-
+@login_required(login_url="login")
 def order(request,id):
     user=request.user
-    order = get_object_or_404(Product, id=id)
-    item= CartItem.objects.get_or_create(product=order,user=user)
+    order1= get_object_or_404(Product, id=id)
+    order, is_created = Order.objects.get_or_create(product=order1,user=user)
     shipping_charge=70
-    total_price=order.price + shipping_charge
-    return render(request,'proceed_payment.html',{'item':item,'total_price':total_price,"shipping_charge":shipping_charge})
+    total_price=order.product.price + shipping_charge
+    return render(request,'proceed_payment.html',{'order':order,'total_price':total_price,"shipping_charge":shipping_charge})
     
+# def cancle(request):
+#     return redirect('home')
+@login_required(login_url="login")
+def payment(request,id):
+    user=request.user
+    product=get_object_or_404(Product,id=id)
+    shipping_charge=70
+    total_price=product.price + shipping_charge
+
+    return render(request,"payment.html",{'total_price':total_price,'product':product})
+
+# views.py
+
+
+
+
+
+
+@login_required(login_url="login")
+def payment(request,id=None):
+    try:
+        if id:
+            product = get_object_or_404(Product, id=id)
+        else:
+            products=CartItem.objects.all()
+            price = sum(item.product.price * item.quantity for item in products)
+
+    except:
+        return ValueError("value not found")
+        
+    if request.method == 'POST':
+        try:
+            # Create a Stripe Checkout Session
+            session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[{
+                    'price_data': {
+                        'currency': 'inr',  # Change to 'usd' or another supported currency
+                        'product_data': {
+                            'name': product.product_name,
+                        },
+                        'unit_amount': int(product.price * 100),  # Amount in cents
+                    },
+                    'quantity': 1,
+                }],
+                mode='payment',
+                success_url=request.build_absolute_uri('/payment_success/'),
+                cancel_url=request.build_absolute_uri('/payment_cancel/'),
+            )
+            return redirect(session.url, code=303)
+        except stripe.error.StripeError as e:
+            return JsonResponse({'error': f'Stripe error: {str(e)}'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'Error: {str(e)}'}, status=500)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+# views.py
+@login_required(login_url="login")
+def payment_success(request):
+    return render(request, 'payment_success.html')
+@login_required(login_url="login")
+def payment_cancel(request):
+    return render(request, 'payment_cancel.html')
+
 
     

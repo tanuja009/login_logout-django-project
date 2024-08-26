@@ -90,7 +90,7 @@
             <li ><a href="{% url 'About'%}">About Us</a></li>
             <li><a href="#">Contact Us</a></li>
             <li><a href="{% url 'profile' %}">User Profile</a></li>
-            <li><a href="{% url 'cart_view' %}">Cart</a></li>
+            {% comment %} <li><a href="{% url 'cart_view' %}">Cart</a></li> {% endcomment %}
            <li> <a href="{% url 'logout_view'%}">Logout</a></li>
 
          </div>
@@ -123,28 +123,32 @@
      
       
      {% comment %} product show {% endcomment %}
-        <div class="product-grid pt-5">
+     <div style="display:flex;justify-content:center;align-item:center">
+        <div style="height: 400px; width: 400px;">
         
-        <div class="product-card" style="height:350px;width:250px;">
-            <img src="{{ item.image.url }}" alt="{{ item.product_name }}">
-            <div class="product-info">
-               
-                <p class="product-name">{{ item.product_name }}</p>
+        <center><img src="{{ order.product.image.url }}" alt="{{ order.product.product_name }}" style="height: 200px; width: 200px;border:none"></center>
+                <center><div>
+               <p class="product-name">{{order.product.product_name }}</p>
                
                 
-                <p class="product-description">{{ item.description }}</p>
-                <h2 class="product-price">price:${{ item.price }}</p> 
-                <p class="product-price">rs:${{ shipping_charge}}</p> 
-                <p class="product-price">price:${{ total_price }}</p> 
-
-            </div>
-           <a href="#"><button type="submit" class="btn btn-primary">Proceed To Pay</button></a>
-        </div>
-        
-        <!-- Repeat for other products -->
-       
+                <p class="product-description">{{ order.product.description }}</p>
+                <p class="product-price">Price:{{ order.product.price }}rs</p> 
+                <p class="product-price">Shipping charge:{{ shipping_charge}}rs</p> 
+                <p class="product-price">Total_Price:{{ total_price }}rs</p>
+                </div>
+            </center>
+        <center>
+            <form action="{% url 'payment' order.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" id="checkout-button btn-success">Checkout</button>
+              </form>
+            
+        </center>
+        </div> 
     </div>
 
+
+       
   
     <script src="{% static 'my_app/js/script.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -153,5 +157,20 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Get the button element
+        const alertButton = document.getElementById('alertButton');
+        const alertButton1 = document.getElementById('alertButton1');
+
+        // Add an event listener to the button
+        alertButton.addEventListener('click', function() {
+            // Show the alert popup
+            alert('Order Successfully');
+        });
+        alertButton1.addEventListener('click', function() {
+            // Show the alert popup
+            alert('Are You Sure For Cancle Your Order');
+        });
+    </script>
 </body>
 </html>
