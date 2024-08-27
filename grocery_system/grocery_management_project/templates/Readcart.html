@@ -73,7 +73,7 @@
             <div class="dropdown">
             <a href="#" class="nav-item">Category <i class="fa fa-caret-down"></i></a>
             <div class="dropdown-content">
-               {% for i in categories %}
+               {% for i in cate %}
                <li><a href="{% url 'read' i.id %}">{{ i.name }}</a></li>
 
                 {% endfor %}
@@ -110,10 +110,10 @@
       
  
       
-      <div class="product-grid pt-5">
+       <div class="product-grid pt-5">
         {% for product in data %}
-        <div class="product-card">
-            <img src="{{ product.image.url }}" alt="{{ product.product_name }}">
+        <div class="product-card" style="height: 400px; width: 200px;">
+            <img src="{{ product.image.url }}" alt="{{ product.product_name }}" style="height: 200px; width: 200px;">
             <div class="product-info">
                 <p class="product-name">{{ product.product_name }}</p>
                 <p class="product-description">{{ product.description }}</p>
@@ -124,7 +124,8 @@
         {% endfor %}
         <!-- Repeat for other products -->
        
-    </div>
+    </div> 
+   
 
     <script src="{% static 'my_app/js/script.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

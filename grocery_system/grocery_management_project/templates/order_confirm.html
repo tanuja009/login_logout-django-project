@@ -81,7 +81,7 @@
             <div class="dropdown">
             <a href="#" class="nav-item">Category <i class="fa fa-caret-down"></i></a>
             <div class="dropdown-content">
-               {% for i in categories %}
+               {% for i in cate %}
                <li><a href="{% url 'read' i.id %}">{{ i.name }}</a></li>
 
                 {% endfor %}

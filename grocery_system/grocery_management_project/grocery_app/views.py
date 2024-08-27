@@ -117,7 +117,9 @@ def home(request):
 
 
 def About(request):
-    return render(request,"about_us.html")
+    categories=category.objects.all()
+
+    return render(request,"about_us.html",{'cate':categories})
 
 def Add_Product(request):
     if request.method == 'POST':
@@ -143,12 +145,14 @@ def logout_view(request):
 def read_cat(request,id):
     category1=category.objects.get(id=id)
     product=Product.objects.filter(category=category1)
-    cate=category.objects.all()
-    return render(request,"fruits.html",{'data':product,'cate':cate})
+    categories=category.objects.all()
+    return render(request,"Readcart.html",{'data':product,'cate':categories})
 
 def product_details(request, id):
     item = get_object_or_404(Product, id=id)
-    return render(request, "details.html", {'item': item})
+    categories=category.objects.all()
+
+    return render(request, "details.html", {'item': item,'cate':categories})
 
 def product_search(request):
     query = request.GET.get('q')
@@ -165,7 +169,9 @@ def profile(request):
         user = request.user
         # Use `get_object_or_404` to handle cases where the user might not be found.
         profile = get_object_or_404(User, username=user.username)
-        return render(request, 'profile.html', {'profile': profile})
+        categories=category.objects.all()
+
+        return render(request, 'profile.html', {'profile': profile,'cate':categories})
     except User.DoesNotExist:
         return HttpResponse("Profile not found", status=404)
     except Exception as e:
@@ -193,8 +199,11 @@ def Add_cart(request,id):
 def cart_view(request):
     username=request.user
     items=CartItem.objects.filter(user=username)
-    total_price = sum(item.product.price * item.quantity for item in items)  
-    return render(request, 'cart.html', {'items': items, 'total_price': total_price}) 
+    categories=category.objects.all()
+    shipping_charge=70
+    total_amount=sum(item.product.price * item.quantity for item in items) 
+    total_price = sum(item.product.price * item.quantity for item in items) +shipping_charge
+    return render(request, 'cart.html', {'items': items, 'total_price': total_price,"cate":categories,'shipping_charge':shipping_charge,'total_amount':total_amount}) 
 
 @login_required(login_url="login")
 def edit_profile(request):
@@ -224,6 +233,8 @@ def Delete(request,id):
 def order_confirm(request, id):
     user=request.user
     order = get_object_or_404(Product, id=id)
+    categories=category.objects.all()
+
     print(data)
     # Fetch the order or product based on the order_id
     # order, created = Order.objects.get_or_create(
@@ -234,19 +245,21 @@ def order_confirm(request, id):
     # # Fetch the product related to this order
     # product = order.product
     
-    return render(request, 'order_confirm.html', {'data': order})
+    return render(request, 'order_confirm.html', {'data': order,'cate':categories})
 @login_required(login_url="login")
 def order(request,id):
     user=request.user
     order1= get_object_or_404(Product, id=id)
     order, is_created = Order.objects.get_or_create(product=order1,user=user)
+    categories=category.objects.all()
+
     shipping_charge=70
     total_price=order.product.price + shipping_charge
-    return render(request,'proceed_payment.html',{'order':order,'total_price':total_price,"shipping_charge":shipping_charge})
+    return render(request,'proceed_payment.html',{'order':order,'total_price':total_price,"shipping_charge":shipping_charge,'cate':categories})
     
 
 @login_required(login_url="login")
-def payment(request, id,extra_field=None):
+def payment(request, id):
     if id != "null":
         # Case 1: When an order ID is provided
         order = get_object_or_404(Order, id=id)
@@ -254,7 +267,7 @@ def payment(request, id,extra_field=None):
             try:
                 # Access the related Product instance through the Order
                 product = order.product
-
+                shipping_charge=70
                 # Create a Stripe Checkout Session
                 session = stripe.checkout.Session.create(
                     payment_method_types=['card'],
@@ -264,7 +277,7 @@ def payment(request, id,extra_field=None):
                             'product_data': {
                                 'name': product.product_name,  # Accessing product name correctly
                             },
-                            'unit_amount': int(product.price * 100)+extra_field,  # Amount in paise (INR)
+                            'unit_amount': int(product.price * 100)+(shipping_charge * 100),  # Amount in paise (INR)
                         },
                         'quantity': 1,
                     }],
@@ -283,6 +296,7 @@ def payment(request, id,extra_field=None):
     else:
         # Case 2: When no order ID is provided, process items in the cart
         items = CartItem.objects.filter(user=request.user)
+        shipping_charge=70
         if request.method == 'POST':
             try:
                 line_items = []
@@ -295,7 +309,7 @@ def payment(request, id,extra_field=None):
                             'product_data': {
                                 'name': product.product_name,
                             },
-                            'unit_amount': int(product.price * 100),
+                            'unit_amount': int(product.price * 100)+(shipping_charge * 100),
                         },
                         'quantity': item.quantity,  # Assuming CartItem has a quantity field
                     })
@@ -323,7 +337,7 @@ def payment_success(request):
     return render(request, 'payment_success.html')
 @login_required(login_url="login")
 def payment_cancel(request):
-    return render(request, 'payment_cancel.html')
+    return render(request, 'home.html')
 
 def order_list(request):
     # Fetch all orders for the logged-in user

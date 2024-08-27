@@ -41,11 +41,10 @@ urlpatterns = [
     path('Delete/<int:id>',views.Delete,name="Delete"),
     path('order_confirm/<int:id>/',views.order_confirm,name="order_confirm"),
     path('order/<int:id>/',views.order,name="order"),
-    # path('cancle/',views.cancle,name="cancle"),
-    path('payment/<slug:id>/<int:total_price>/', views.payment, name='payment'),
+    path('payment/<slug:id>/', views.payment, name='payment'),
     path('create-checkout-session/<int:id>/', views.payment, name='create-checkout-session'),
-    path('payment/success/', views.payment_success, name='payment_success'),
-    path('payment/cancel/', views.payment_cancel, name='payment_cancel'),
+    path('payment_success/', views.payment_success, name='payment_success'),
+    path('capayment_cancel/', views.payment_cancel, name='payment_cancel'),
     path('orders/', views.order_list, name='order_list'),
 
 

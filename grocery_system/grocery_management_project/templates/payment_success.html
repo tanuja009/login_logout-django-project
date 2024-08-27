@@ -1,82 +1,74 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Page</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+   
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'my_app/css/styles.css' %}">
+    
+    {% comment %} <style>
+      .carousel-item img {
+          object-fit: cover;
+          height: 400px; /* Adjust height as needed */
+      }
+  </style> {% endcomment %}
+  <style>
+   .dropdown {
+      position: relative;
+      display: inline-block;
+  }
+  
+  .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 200px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      color: black;
+  }
+  
+  .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+  }
+  
+  .dropdown-content a:hover {
+      background-color: #f1f1f1;
+  }
+  
+  .dropdown:hover .dropdown-content {
+      display: block;
+  }
+  
+  .nav-item:hover {
+      color: #ddd;
+  }
+  
+  </style>
+
+</head>
+<body>
        
         
-        
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <link rel="stylesheet" href="{% static 'my_app/css/styles.css' %}">
-        
-        {% comment %} <style>
-          .carousel-item img {
-              object-fit: cover;
-              height: 400px; /* Adjust height as needed */
-          }
-      </style> {% endcomment %}
-      <style>
-       .dropdown {
-          position: relative;
-          display: inline-block;
-      }
-      
-      .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: white;
-          min-width: 200px;
-          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-          z-index: 1;
-          color: black;
-      }
-      
-      .dropdown-content a {
-          color: black;
-          padding: 12px 16px;
-          text-decoration: none;
-          display: block;
-      }
-      
-      .dropdown-content a:hover {
-          background-color: #f1f1f1;
-      }
-      
-      .dropdown:hover .dropdown-content {
-          display: block;
-      }
-      
-      .nav-item:hover {
-          color: #ddd;
-      }
-      
-        table td {
-            padding: 10px; /* Adjust the value as needed */
-        }
-    
-      
-      </style>
-    
-    </head>
-<body>
-      {% comment %} Header {% endcomment %}
-      <div style="padding:5px">
-        <a href="#" class="icon"> <i cl ss="fas fa-home"></i> Home</a>
-        <a href="#"class="icon" >  <i class="fab fa-github"></i> GitHub</a>
-        <a href="#" class="icon">  <i class="fa-brands fa-square-instagram"></i>Instagram</a>
-        <a href="#" class="icon">  <i class="fa-brands fa-facebook"></i>Facebook</a>
-        <a href="{% url 'login'%}">Login</a>
-        <a href="{% url 'logout_view'%}">Logout</a>
-        </div>
 
 
         {% comment %} navbar {% endcomment %}
         <nav>
+
+        
+            
+       
          <div class="menu-icon">
           <img src="https://marketplace.canva.com/EAFzje8Pffo/1/0/1600w/canva-colorful-illustrative-organic-grocery-online-shop-logo-Alka_dqR_gQ.jpg" alt="grocery"/>
          </div>
@@ -98,6 +90,8 @@
             <li ><a href="{% url 'About'%}">About Us</a></li>
             <li><a href="#">Contact Us</a></li>
             <li><a href="{% url 'profile' %}">User Profile</a></li>
+            <li><a href="{% url 'cart_view' %}">View Cart</a></li>
+            <li><a href="{% url 'order_list' %}">My Order</a></li>
             {% comment %} <li><a href="{% url 'cart_view' %}">Cart</a></li> {% endcomment %}
            <li> <a href="{% url 'logout_view'%}">Logout</a></li>
 
@@ -121,52 +115,14 @@
         
         
         {% endif %}
+        
         </nav>
-
-
-
-
-
-<center>
-    <h1>Your Cart</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Image</th>
-                
-                <th>Total_amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item.product.product_name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.product.price }}</td>
-                <td><img src="{{item.product.image.url}}" alt="{{item.product.product_name}}" height="50px" width="50px"></td>
-                
-               
-            </tr>
-        {% endfor %}
         
-        </tbody>
-    </table>
-    <h2>Total: {{ total_amount }} + {{shipping_charge}}={{total_price}}</h2>
-    <center>
-      
-        <form action="{% url 'payment' id="null" %}" method="POST">
-            {% csrf_token %}
-            <button type="submit" id="checkout-button btn-success">Proceed To Checkout</button>
-          </form>
-        
-    
-    </center>
-</center>
-
-
+       <h2 style="background--color:grey;color:blue;text-align:center">
+        Thanku For Order
+       </h2>
+       <p>visit again</p>
+  
     <script src="{% static 'my_app/js/script.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
