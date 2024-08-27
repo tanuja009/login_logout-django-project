@@ -155,10 +155,12 @@
     </table>
     <h2>Total: {{ total_price }}</h2>
     <center>
-        <form action="{% url 'payment' 'id=none' %}" method="POST">
+      
+        <form action="{% url 'payment' id="null" %}" method="POST">
             {% csrf_token %}
-            <button type="submit" id="checkout-button">Proceed to checkout</button>
+            <button type="submit" id="checkout-button btn-success">Proceed To Checkout</button>
           </form>
+        
     
     </center>
 </center>

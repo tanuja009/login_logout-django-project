@@ -36,17 +36,17 @@ urlpatterns = [
     path('Add_cart/<int:id>/',views.Add_cart,name="Add_cart"),
     path('search/', views.product_search, name='product_search'),
     path('profile/',views.profile,name="profile"),
-    # path('cart_view/',views.cart_view,name="cart_view"),
+    path('cart_view/',views.cart_view,name="cart_view"),
     path('edit_profile/',views.edit_profile,name="edit_profile"),
     path('Delete/<int:id>',views.Delete,name="Delete"),
     path('order_confirm/<int:id>/',views.order_confirm,name="order_confirm"),
     path('order/<int:id>/',views.order,name="order"),
     # path('cancle/',views.cancle,name="cancle"),
-    path('payment/<int:id>/', views.payment, name='payment'),
+    path('payment/<slug:id>/<int:total_price>/', views.payment, name='payment'),
     path('create-checkout-session/<int:id>/', views.payment, name='create-checkout-session'),
     path('payment/success/', views.payment_success, name='payment_success'),
     path('payment/cancel/', views.payment_cancel, name='payment_cancel'),
-   
+    path('orders/', views.order_list, name='order_list'),
 
 
 ]

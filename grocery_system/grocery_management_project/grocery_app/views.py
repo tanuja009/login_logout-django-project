@@ -190,11 +190,11 @@ def Add_cart(request,id):
     
 
 
-# def cart_view(request):
-#     username=request.user
-#     items=CartItem.objects.filter(user=username)
-#     total_price = sum(item.product.price * item.quantity for item in items)  
-#     return render(request, 'cart.html', {'items': items, 'total_price': total_price}) 
+def cart_view(request):
+    username=request.user
+    items=CartItem.objects.filter(user=username)
+    total_price = sum(item.product.price * item.quantity for item in items)  
+    return render(request, 'cart.html', {'items': items, 'total_price': total_price}) 
 
 @login_required(login_url="login")
 def edit_profile(request):
@@ -244,62 +244,79 @@ def order(request,id):
     total_price=order.product.price + shipping_charge
     return render(request,'proceed_payment.html',{'order':order,'total_price':total_price,"shipping_charge":shipping_charge})
     
-# def cancle(request):
-#     return redirect('home')
-@login_required(login_url="login")
-def payment(request,id):
-    user=request.user
-    product=get_object_or_404(Product,id=id)
-    shipping_charge=70
-    total_price=product.price + shipping_charge
-
-    return render(request,"payment.html",{'total_price':total_price,'product':product})
-
-# views.py
-
-
-
-
-
 
 @login_required(login_url="login")
-def payment(request,id=None):
-    try:
-        if id:
-            product = get_object_or_404(Product, id=id)
-        else:
-            products=CartItem.objects.all()
-            price = sum(item.product.price * item.quantity for item in products)
+def payment(request, id,extra_field=None):
+    if id != "null":
+        # Case 1: When an order ID is provided
+        order = get_object_or_404(Order, id=id)
+        if request.method == 'POST':
+            try:
+                # Access the related Product instance through the Order
+                product = order.product
 
-    except:
-        return ValueError("value not found")
-        
-    if request.method == 'POST':
-        try:
-            # Create a Stripe Checkout Session
-            session = stripe.checkout.Session.create(
-                payment_method_types=['card'],
-                line_items=[{
-                    'price_data': {
-                        'currency': 'inr',  # Change to 'usd' or another supported currency
-                        'product_data': {
-                            'name': product.product_name,
+                # Create a Stripe Checkout Session
+                session = stripe.checkout.Session.create(
+                    payment_method_types=['card'],
+                    line_items=[{
+                        'price_data': {
+                            'currency': 'inr',
+                            'product_data': {
+                                'name': product.product_name,  # Accessing product name correctly
+                            },
+                            'unit_amount': int(product.price * 100)+extra_field,  # Amount in paise (INR)
                         },
-                        'unit_amount': int(product.price * 100),  # Amount in cents
-                    },
-                    'quantity': 1,
-                }],
-                mode='payment',
-                success_url=request.build_absolute_uri('/payment_success/'),
-                cancel_url=request.build_absolute_uri('/payment_cancel/'),
-            )
-            return redirect(session.url, code=303)
-        except stripe.error.StripeError as e:
-            return JsonResponse({'error': f'Stripe error: {str(e)}'}, status=400)
-        except Exception as e:
-            return JsonResponse({'error': f'Error: {str(e)}'}, status=500)
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+                        'quantity': 1,
+                    }],
+                    mode='payment',
+                    success_url=request.build_absolute_uri('/payment_success/'),
+                    cancel_url=request.build_absolute_uri('/payment_cancel/'),
+                )
+                return redirect(session.url, code=303)
+            except stripe.error.StripeError as e:
+                return JsonResponse({'error': f'Stripe error: {str(e)}'}, status=400)
+            except Exception as e:
+                return JsonResponse({'error': f'Error: {str(e)}'}, status=500)
+        else:
+            return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+    else:
+        # Case 2: When no order ID is provided, process items in the cart
+        items = CartItem.objects.filter(user=request.user)
+        if request.method == 'POST':
+            try:
+                line_items = []
+                
+                for item in items:
+                    product = item.product  # Access the product through each cart item
+                    line_items.append({
+                        'price_data': {
+                            'currency': 'inr',
+                            'product_data': {
+                                'name': product.product_name,
+                            },
+                            'unit_amount': int(product.price * 100),
+                        },
+                        'quantity': item.quantity,  # Assuming CartItem has a quantity field
+                    })
+
+                # Create a Stripe Checkout Session with all cart items
+                session = stripe.checkout.Session.create(
+                    payment_method_types=['card'],
+                    line_items=line_items,
+                    mode='payment',
+                    success_url=request.build_absolute_uri('/payment_success/'),
+                    cancel_url=request.build_absolute_uri('/payment_cancel/'),
+                )
+
+                return redirect(session.url, code=303)
+            except stripe.error.StripeError as e:
+                return JsonResponse({'error': f'Stripe error: {str(e)}'}, status=400)
+            except Exception as e:
+                return JsonResponse({'error': f'Error: {str(e)}'}, status=500)
+        else:
+            return JsonResponse({'error': 'Invalid request method'}, status=405)
+        
 # views.py
 @login_required(login_url="login")
 def payment_success(request):
@@ -307,6 +324,12 @@ def payment_success(request):
 @login_required(login_url="login")
 def payment_cancel(request):
     return render(request, 'payment_cancel.html')
+
+def order_list(request):
+    # Fetch all orders for the logged-in user
+    orders = Order.objects.filter(user=request.user)
+
+    return render(request, 'order_list.html', {'orders': orders})
 
 
     
