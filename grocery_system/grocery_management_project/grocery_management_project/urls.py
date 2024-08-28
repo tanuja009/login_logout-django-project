@@ -20,7 +20,7 @@ from grocery_app import views
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
-
+# from grocery_app.views import pro
 
 
 urlpatterns = [
@@ -37,7 +37,7 @@ urlpatterns = [
     path('search/', views.product_search, name='product_search'),
     path('profile/',views.profile,name="profile"),
     path('cart_view/',views.cart_view,name="cart_view"),
-    path('edit_profile/',views.edit_profile,name="edit_profile"),
+    path('edit_profile/<int:id>/',views.edit_profile,name="edit_profile"),
     path('Delete/<int:id>',views.Delete,name="Delete"),
     path('order_confirm/<int:id>/',views.order_confirm,name="order_confirm"),
     path('order/<int:id>/',views.order,name="order"),

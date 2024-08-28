@@ -1,152 +1,27 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Page</title>
-   
-    
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'my_app/css/styles.css' %}">
-    
-    {% comment %} <style>
-      .carousel-item img {
-          object-fit: cover;
-          height: 400px; /* Adjust height as needed */
-      }
-  </style> {% endcomment %}
-  <style>
-   .dropdown {
-      position: relative;
-      display: inline-block;
-  }
-  
-  .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: white;
-      min-width: 200px;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-      z-index: 1;
-      color: black;
-  }
-  
-  .dropdown-content a {
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-  }
-  
-  .dropdown-content a:hover {
-      background-color: #f1f1f1;
-  }
-  
-  .dropdown:hover .dropdown-content {
-      display: block;
-  }
-  
-  .nav-item:hover {
-      color: #ddd;
-  }
-  
-  </style>
-
-</head>
-  <body>
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <img src="https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg" alt="" height="500px" width="100%">
 
 
-
-
-    <nav>
-        <div class="logo">
-           Grocery
-        </div>
-        <div class="nav-items">
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'home' %}">Home</a></li> 
-            <div class="dropdown">
-            <a href="#" class="nav-item">Category <i class="fa fa-caret-down"></i></a>
-            <div class="dropdown-content">
-               {% for i in cate %}
-               <li><a href="{% url 'read' i.id %}">{{ i.name }}</a></li>
-
-                {% endfor %}
-            </div>
-            </div>
-            <li ><a href="{% url 'About'%}">About Us</a></li>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="{% url 'profile' %}">User Profile</a></li>
-            {% comment %} <li><a href="{% url 'cart_view' %}">Cart</a></li> {% endcomment %}
-           <li> <a href="{% url 'logout_view'%}">Logout</a></li>
-
-         </div>
-         <div class="search-icon">
-            <span class="fas fa-search"></span>
-         </div>
-         <div class="cancel-icon">
-            <span class="fas fa-times"></span>
-         </div>
-         <form method="GET" action="{% url 'product_search' %}">
-            <input type="text" name="q" placeholder="Search products...">
-            <button type="submit">Search</button>
-        </form>
-        {% else %}
-    
-        <ul style="display: flex; justify-content: space-between; align-items: center; list-style: none; padding: 0; margin: 0;">
-            <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="{% url 'signup' %}">Sign Up</a></li>
-        </ul>
-        
-        
-        {% endif %}
-     </nav>
-
-
-
-
-
-
-
-
-
-
-
-
-     <div>
-     <img src="https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg" alt="" height="500px" width="100%">
-
-
-     </div>
-     <div style="display-flex;justify-content:center;align-item:center">
-     <div>
-         <h1 style="text-align:center">Grocery</h1>
-         <p>
-          The Grocery Management System is a comprehensive solution designed to streamline the operations of grocery stores, from inventory management to sales tracking. This system helps store owners efficiently manage their products, track inventory levels, and monitor sales in real-time. It also supports the management of customer orders, billing, and reporting, ensuring that both customers and staff have a seamless experience. With features like automated stock updates, customizable product categories, and easy-to-use interfaces, this system is perfect for grocery stores of all sizes looking to enhance their operational efficiency and customer satisfaction.
-         </p>
-         {% comment %} Header {% endcomment %}
-        <div style="padding:5px">
-          <a href="#" class="icon"> <i cl ss="fas fa-home"></i> Home</a>
-          <a href="#"class="icon" >  <i class="fab fa-github"></i> GitHub</a>
-          <a href="#" class="icon">  <i class="fa-brands fa-square-instagram"></i>Instagram</a>
-          <a href="#" class="icon">  <i class="fa-brands fa-facebook"></i>Facebook</a>
-          
-          </div>
-
-
-     </div>
     </div>
-    <script src="{% static 'my_app/js/script.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <div style="display-flex;justify-content:center;align-item:center">
+    <div>
+        <h1 style="text-align:center">Grocery</h1>
+        <p>
+         The Grocery Management System is a comprehensive solution designed to streamline the operations of grocery stores, from inventory management to sales tracking. This system helps store owners efficiently manage their products, track inventory levels, and monitor sales in real-time. It also supports the management of customer orders, billing, and reporting, ensuring that both customers and staff have a seamless experience. With features like automated stock updates, customizable product categories, and easy-to-use interfaces, this system is perfect for grocery stores of all sizes looking to enhance their operational efficiency and customer satisfaction.
+        </p>
+        {% comment %} Header {% endcomment %}
+       <div style="padding:5px">
+         <a href="#" class="icon"> <i cl ss="fas fa-home"></i> Home</a>
+         <a href="#"class="icon" >  <i class="fab fa-github"></i> GitHub</a>
+         <a href="#" class="icon">  <i class="fa-brands fa-square-instagram"></i>Instagram</a>
+         <a href="#" class="icon">  <i class="fa-brands fa-facebook"></i>Facebook</a>
+         
+         </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
-</html>
+
+    </div>
+   </div>
+{% endblock %}
+    

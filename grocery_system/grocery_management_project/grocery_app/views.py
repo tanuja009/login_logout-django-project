@@ -9,58 +9,31 @@ from .models import *
 from django.contrib.auth.models import User
 import stripe
 from django.conf import settings
+from django.core.mail import send_mail
 from django.http import JsonResponse
-
-
-
+from django.views import View
+# from django.contrib import messages
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-# def login_view(request):
-#     if request.method == 'POST':
-#         form = UserForm(request.POST)
-#         if form.is_valid():
-#             # Extract email and password from form
-#             email = form.cleaned_data['email']
-#             password = form.cleaned_data['password']
-            
-#             # Authenticate user
-#             user = authenticate(request, username=email, password=password)
-            
-#             if user is not None:
-#                 # Log in user
-#                 login(request, user)
-#                 return redirect('home')  # Redirect to the home page after successful login
-#             else:
-#                 # Invalid credentials
-#                 return render(request, 'login.html', {'form': form, 'error': 'Invalid email or password'})
-#     else:
-#         form = UserForm()
-    
-#     return render(request, 'login.html', {'form': form})
-
-
 
 def SignupPage(request):
-    if request.method=='POST':
-        uname=request.POST.get('username')
-        email=request.POST.get('email')
-        pass1=request.POST.get('password1')
-        pass2=request.POST.get('password2')
+        if request.method=='POST':
+            uname=request.POST.get('username')
+            email=request.POST.get('email')
+            pass1=request.POST.get('password1')
+            pass2=request.POST.get('password2')
 
-        if pass1!=pass2:
-            return HttpResponse("Your password and confrom password are not Same!!")
-        else:
+            if pass1!=pass2:
+                return HttpResponse("Your password and confrom password are not Same!!")
+            else:
 
-            my_user=User.objects.create_user(uname,email,pass1)
-            my_user.save()
+                my_user=User.objects.create_user(uname,email,pass1)
+                my_user.save()
+            
+                return redirect('login')
         
-            return redirect('login')
-        
-
-
-
-    return render (request,'signup.html')
+        return render (request,'signup.html')
 
 
 # def register_view(request):
@@ -93,10 +66,18 @@ def LoginPage(request):
         user=authenticate(request,username=username,password=pass1)
         if user is not None:
             login(request,user)
+            send_mail(
+                "Welcome Mail",
+                "Welcome To Our Grocery World",
+                "tapatidar@bestpeers.com",
+                [user.email],
+                fail_silently=False,
+                    )
             return redirect('home')
         else:
             # messages.ERROR(request,"user name password are wrong")
             return redirect('login')
+        
         
 
     return render (request,'login.html')
@@ -119,15 +100,16 @@ def home(request):
 def About(request):
     categories=category.objects.all()
 
-    return render(request,"about_us.html",{'cate':categories})
+    return render(request,"about_us.html",{'categories':categories})
 
 def Add_Product(request):
     if request.method == 'POST':
         form = Product_Add_Form(request.POST, request.FILES)
+        categories=category.objects.all()
         if form.is_valid():
             form.save()
             user=Product.objects.all()
-            return render(request,'home.html',{'user':user})  # Redirect to the home page or any other page
+            return render(request,'home.html',{'user':user,'categories':categories})  # Redirect to the home page or any other page
     else:
         form = Product_Add_Form()
 
@@ -143,16 +125,16 @@ def logout_view(request):
     return redirect('login')
 
 def read_cat(request,id):
-    category1=category.objects.get(id=id)
-    product=Product.objects.filter(category=category1)
+    categories=category.objects.get(id=id)
+    product=Product.objects.filter(category=categories)
     categories=category.objects.all()
-    return render(request,"Readcart.html",{'data':product,'cate':categories})
+    return render(request,"Readcart.html",{'data':product,'categories':categories})
 
 def product_details(request, id):
     item = get_object_or_404(Product, id=id)
     categories=category.objects.all()
 
-    return render(request, "details.html", {'item': item,'cate':categories})
+    return render(request, "details.html", {'item': item,'categories':categories})
 
 def product_search(request):
     query = request.GET.get('q')
@@ -171,7 +153,7 @@ def profile(request):
         profile = get_object_or_404(User, username=user.username)
         categories=category.objects.all()
 
-        return render(request, 'profile.html', {'profile': profile,'cate':categories})
+        return render(request, 'profile.html', {'profile': profile,'categories':categories})
     except User.DoesNotExist:
         return HttpResponse("Profile not found", status=404)
     except Exception as e:
@@ -201,27 +183,55 @@ def cart_view(request):
     items=CartItem.objects.filter(user=username)
     categories=category.objects.all()
     shipping_charge=70
-    total_amount=sum(item.product.price * item.quantity for item in items) 
-    total_price = sum(item.product.price * item.quantity for item in items) +shipping_charge
-    return render(request, 'cart.html', {'items': items, 'total_price': total_price,"cate":categories,'shipping_charge':shipping_charge,'total_amount':total_amount}) 
+    total_price = sum(item.product.price * item.quantity for item in items)
+    return render(request, 'cart.html', {'items': items, 'total_price': total_price, "categories":categories,'shipping_charge':shipping_charge}) 
 
 @login_required(login_url="login")
-def edit_profile(request):
+def edit_profile(request,id):
+    # if request.method == "POST":
+    #     username = request.POST.get("username")
+    #     email = request.POST.get("email")
+    #     print("Ema    il is:", email)
+    #     if email:
+    #         update_data = User.objects.filter(email=email)
+    #         print(update_data)
+    #     else:
+    #         update_data = User.objects.filter(id=id)
+    #         print(update_data)
+    #     print("Update data :", update_data)
+    #     update_data.username = username
+    #     update_data.save()
+    #     return redirect("profile")
+
+    
+    
     if request.method == "POST":
-        username = request.POST.get("username")
+        username= request.POST.get("username")
         email = request.POST.get("email")
         print("Email is:", email)
-        update_data = User.objects.get(email=email)
-        print("Update data :", update_data)
-        update_data.username = username
-        update_data.save()
-        return redirect("profile")
-
+        # breakpoint()
+        
+        if email:
+            update_data = User.objects.filter(email=email).first()
+            print(update_data)  # Fetch the first matching user
+        else:
+            update_data = User.objects.filter(id=id).first() 
+            print(update_data) # Fetch the first matching user by id
+        
+        if update_data:  # Check if the user was found
+            print("Update data:", update_data)
+            update_data.username = username
+            update_data.save()
+            return redirect("profile")
+        else:
+            return HttpResponse("data not found")
     else:
-        username = request.user
-        app_user = User.objects.get(username=username)
-        category1= category.objects.all()
-        return render(request, "edit_profile.html", {"profile": app_user,'categories':category1})
+        user= request.user
+        app_user = User.objects.get(username=user)
+        categories= category.objects.all()
+        return render(request, "edit_profile.html", {"profile": app_user,'categories':categories})
+        # Handle the case where no user was found, e.g., by showing an error message
+
 
 @login_required(login_url="login")
 def Delete(request,id):
@@ -245,7 +255,7 @@ def order_confirm(request, id):
     # # Fetch the product related to this order
     # product = order.product
     
-    return render(request, 'order_confirm.html', {'data': order,'cate':categories})
+    return render(request, 'order_confirm.html', {'data': order,'categories':categories})
 @login_required(login_url="login")
 def order(request,id):
     user=request.user
@@ -255,11 +265,12 @@ def order(request,id):
 
     shipping_charge=70
     total_price=order.product.price + shipping_charge
-    return render(request,'proceed_payment.html',{'order':order,'total_price':total_price,"shipping_charge":shipping_charge,'cate':categories})
+    return render(request,'proceed_payment.html',{'order':order,'total_price':total_price,"shipping_charge":shipping_charge,'categories':categories})
     
 
 @login_required(login_url="login")
 def payment(request, id):
+    user=request.user
     if id != "null":
         # Case 1: When an order ID is provided
         order = get_object_or_404(Order, id=id)
@@ -277,7 +288,7 @@ def payment(request, id):
                             'product_data': {
                                 'name': product.product_name,  # Accessing product name correctly
                             },
-                            'unit_amount': int(product.price * 100)+(shipping_charge * 100),  # Amount in paise (INR)
+                            'unit_amount': int(product.price * 100)+shipping_charge,  # Amount in paise (INR)
                         },
                         'quantity': 1,
                     }],
@@ -285,6 +296,7 @@ def payment(request, id):
                     success_url=request.build_absolute_uri('/payment_success/'),
                     cancel_url=request.build_absolute_uri('/payment_cancel/'),
                 )
+                
                 return redirect(session.url, code=303)
             except stripe.error.StripeError as e:
                 return JsonResponse({'error': f'Stripe error: {str(e)}'}, status=400)
@@ -309,7 +321,7 @@ def payment(request, id):
                             'product_data': {
                                 'name': product.product_name,
                             },
-                            'unit_amount': int(product.price * 100)+(shipping_charge * 100),
+                            'unit_amount': int(product.price * 100)+shipping_charge ,
                         },
                         'quantity': item.quantity,  # Assuming CartItem has a quantity field
                     })
@@ -334,6 +346,14 @@ def payment(request, id):
 # views.py
 @login_required(login_url="login")
 def payment_success(request):
+    user=request.user
+    send_mail(
+                "thank you Mail",
+                "thanks for order and your interest",
+                "tapatidar@bestpeers.com",
+                [user.email],
+                fail_silently=False,
+                    )
     return render(request, 'payment_success.html')
 @login_required(login_url="login")
 def payment_cancel(request):
