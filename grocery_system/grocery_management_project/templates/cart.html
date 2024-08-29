@@ -10,7 +10,7 @@
                 <th>Price</th>
                 <th>Image</th>
                 
-                <th>Total_amount</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -19,12 +19,15 @@
                 <td>{{ item.product.product_name }}</td>
                 <td>{{ item.quantity }}</td>
                 <td>{{ item.product.price }}</td>
-                <td><img src="{{item.product.image.url}}" alt="{{item.product.product_name}}" height="50px" width="50px"></td>        
+                <td><img src="{{item.product.image.url}}" alt="{{item.product.product_name}}" height="50px" width="50px"></td>
+                <td>
+                    <a href="{% url 'deletecartitem' item.id %}" style="text-decoration:None;text-align:center;color:white;background-color:red;">Delete</a>
+                </td>        
             </tr>
         {% endfor %} 
         </tbody>
     </table>
-    <h2>Total:{{total_price}}+{{shipping_charge}}</h2>
+    <h2>Total:{{total_price}}</h2>
     <center>    
         <form action="{% url 'payment' id="null" %}" method="POST">
             {% csrf_token %}

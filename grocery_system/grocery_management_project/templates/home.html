@@ -32,7 +32,10 @@
             <p class="product-name">{{ product.product_name }}</p>           
             <p class="product-price">${{ product.price }}</p> 
         </div>
-       <a href="{% url 'Add_cart' product.id %}"><button type="submit" class="btn btn-primary">Add to Cart</button></a>
+        <form method="post" action="{% url 'Add_cart' product.id %}">
+            {% csrf_token %}
+            <button type="submit">Add to Cart</button>
+        </form> 
     </div>
     {% endfor %}
 </a>

@@ -10,7 +10,8 @@
         <div style="height: 400px; width: 300px">
             <strong>description:</strong><p style="text-align:center">{{ data.description }}</p>
     <strong style="text-align:center">Price: ${{ data.price }}</strong>
-    <center><a href="{% url 'order' data.id %}" class="btn btn-success" >Confirm order</a>
+    <center><button><a href="{% url 'order' data.id %}" >Confirm order</a>
+    </button>
         
     </center>
 </div>
