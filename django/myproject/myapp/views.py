@@ -1,5 +1,6 @@
 from django.shortcuts import render
-
+from django.views import View
+from .forms import userform
 # Create your views here.
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
@@ -50,3 +51,27 @@ def LoginPage(request):
 def LogoutPage(request):
     logout(request)
     return redirect('login')
+
+class reset(View):
+    def get(self,request):
+        form=userform()
+        return render(request,"reset.html",{'form':form})
+    
+    def post(self, request, *args, **kwargs):
+        form = userform(request.POST)
+        
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+            
+            try:
+                user = User.objects.get(email=email)
+                user.set_password(password)  
+                user.save()
+                return redirect('login')   
+            except User.DoesNotExist:
+               
+                return render(request, 'reset.html', {'form': form, 'error': 'User with this email does not exist'})
+        else:
+            
+            return render(request, 'reset.html', {'form': form})

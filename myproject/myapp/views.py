@@ -2,14 +2,16 @@ from django.shortcuts import render,redirect
 from .models import Student
 from .forms import Userform
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm;
-
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,logout
 # Create your views here.
 
+@login_required(login_url='login')
 def Home(request):
     std=Student.objects.all()
     return render(request,'index.html',{'std':std})
 
+@login_required(login_url='login')
 def Add(request):
     if request.method=='POST':
         form = Userform(request.POST)
@@ -17,17 +19,19 @@ def Add(request):
         if form.is_valid():
             form.save()
             return redirect('home')
+        else:
+            return render(request,"login.html",{"error":'invalid credential'})
     else:
         form = Userform()
     return render(request,'add.html',{"form": form})
             
-
+@login_required(login_url='login')
 def Delete(request,id):
     s=Student.objects.get(pk=id)
     s.delete()
     return redirect('home')
 
-
+@login_required(login_url='login')
 def update(request,id):
     s=Student.objects.get(pk=id)
     return render(request,"update.html",{'std':s})

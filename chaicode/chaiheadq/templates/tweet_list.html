@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Chai Hub{% endblock%}
+{% block content%}
+<h1 class="text-left text-white text-center mt-4">Welcome to our ChaiHub</h1>
+<a class="btn btn-primary" href="{% url 'tweet_create'%}">Create a Tweet</a>
+<div class="container row gap-3 text-white mt-4">
+    {% for i in tweets %}
+    
+    <div class="card" style="width: 18rem;">
+        <img src="{{i.image.url}}" class="card-img-top" alt="">
+        <div class="card-body">
+          <h5 class="card-title">{{i.user.username}}</h5>
+          <p class="card-text">{{i.text}}</p>
+          <a href="{% url 'tweet_edit' i.id %}" class="btn btn-primary">Edit</a>
+          <a href="{% url 'tweet_delete' i.id %}" class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+
+    {% endfor %}
+</div>
+{% endblock %}

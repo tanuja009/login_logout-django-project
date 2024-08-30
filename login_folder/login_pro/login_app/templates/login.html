@@ -7,15 +7,42 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   </head>
   <body>
-    <form method='POST'>
-      {% if error%}
-      {{error}}
-      {% endif %}
+    {% comment %} <form method='POST'>
+      
      {% csrf_token %}
      {{form.as_p}}
+     
      <a href={% url 'home'%}><button>Login</button></a>
-    
-    </form>
+     {% if error %}
+     {{error}}
+     {% endif %}
+    </form> {% endcomment %}
+
+    <form method="post" style="margin: 2px;padding: 3px;">
+      <div class="errors" style="padding: 5px;">
+          {{ error }} 
+      </div>
+      {% csrf_token %}
+      <div class="md3">
+          {{ form.as_p }}
+      </div>
+      {% if form.errors %}
+      
+          <div class="errors">
+              <ul>
+                  {% for field in form %}
+                      {% for error in field.errors %}
+                          <li>{{ error }}</li>
+                      {% endfor %}
+                  {% endfor %}
+              </ul>
+          </div>
+      {% endif %}
+      <button type="submit">Submit</button>
+  </form>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>

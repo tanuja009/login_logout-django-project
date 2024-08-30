@@ -11,6 +11,7 @@
     <div style="display:flex;justify-content:center;align-item:center;" class="mt-5" >
     <form action={% url 'login'%} method="POST">
       {% csrf_token %}
+      <h1>Login Page</h1>
         <div class="mb-3">
           <label for="exampleInputusername" class="form-label">username</label>
           <input name="username" type="text" class="form-control" id="exampleInputusername" aria-describedby="emailHelp" required>
@@ -25,7 +26,9 @@
         Don't have account
         <a href="{% url 'register'%}" tabindex="-1" role="button" aria-disabled="true">register</a>
         <a href="{% url 'home'%}" class="btn btn-primary" role="button" type"submit">login</a>
-      
+        {% if error %} 
+        {{error}}
+        {% endif %}
         
       </form>
     </div>
