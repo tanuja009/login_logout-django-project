@@ -2,7 +2,7 @@
 {% block title %}Chai Hub{% endblock%}
 {% block content%}
 <h1 class="text-center text-white mt-4">Welcome to our ChaiHub</h1>
-<form>
+<form method='POST' enctype="multipart/form-data">
     {% csrf_token %}
     {{form.as_p}}
     <button type="submit">Submit</button>

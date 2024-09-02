@@ -1,0 +1,37 @@
+form label {
+    color: #3498db;  /* Change to your desired color */
+}
+
+/* Target form input fields */
+form input {
+    color: #2c3e50;  /* Change to your desired color */
+}
+
+/* Target form buttons */
+form button {
+    color: #ffffff;  /* Text color for buttons */
+    background-color: #2980b9;  /* Background color for buttons */
+}
+form {
+    background-color: #1e1e1e; /* Slightly lighter background for the form */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Error message styling */
+.error {
+    color: #ff5252; /* Bright red color for error messages */
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* .custom-input {
+    background-color: #333; /* Dark background for input fields */
+    /* border: 1px solid #444; Dark border */
+    /* color: #e0e0e0; Light text color */
+    /* padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box; */
+/* } */ 
+

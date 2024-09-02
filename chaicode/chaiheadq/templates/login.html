@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Chai Hub{% endblock%}
+{% block content%}
+<h1 class="text-center text-white mt-4">Welcome to our ChaiHub</h1>
+<div class="container row d-flex justify-content-center align-item-center">
+    <div style="height:200px;width:325px">
+<form  method='POST' enctype="multipart/form-data" class="border border-light border-3">
+{% csrf_token %}
+{{ form.non_field_errors }}
+{{ form.username.label_tag }} {{ form.username }}
+{% if form.username.errors %}
+    <div class="error text-white">{{ form.username.errors }}</div>
+{% endif %}
+
+{{ form.password.label_tag }} {{ form.password }}<br><br>
+{% if form.password1.errors %}
+    <div class="error text-white">{{ form.password.errors }}</div>
+{% endif %}
+<button type="submit">Submit</button>
+</form>
+</div>
+</div>
+{% endblock %}
