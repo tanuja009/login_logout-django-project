@@ -3,63 +3,89 @@ from .models import Task
 from .serializers import *
 from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse,JsonResponse
+from rest_framework.response import Response
 import io
 from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
 
-class StudentList(ListAPIView):
-    queryset=Task.objects.all()
-    serializer_class=TaskSerializer
+class students_deatils(APIView):
+    def get(self,request):
+        queryset=Task.objects.all() .order_by('-pk')
+        serializer=TaskSerializer(queryset,many=True)
+        return Response({
+            'data':serializer.data
+        })
 
+    def post(self,request):
+        data=request.data
+        serializer=TaskSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'data saved','data':serializer.data})
+        else:
+            return Response({
+                'msg':'data not saved',
+                'errors':serializer.errors,
+            })
+       
+    def put(self,request):
+        data=request.data
+        if not data.get('id'):
+           return Response({
+               'message':'data is not update',
+               'errors':'id is required'
+           })
+        details=Task.objects.get(id=data.get('id'))
+        serializer=TaskSerializer(details,data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'msg':'data upadate',
+                'data':serializer.data
+            })
+        else:
+            return Response({
+                'msg':'data not update',
+                'errors':'validation failed'
 
-# Create your views here.
-#model object - single student data
-
-# def student_details(request):
-#     try:
-#         task = Task.objects.get(id=1)
-#     except Task.DoesNotExist:
-#         return JsonResponse({'error': 'Task not found'}, status=404)
+            })
+       
     
-#     serializer = TaskSerializer(task)
-#     json_data = JSONRenderer().render(serializer.data)  # Corrected to use JSONRenderer as an instance
-#     return JsonResponse(json_data, content_type='application/json')
-
-# def student_details(request):
-#     try:
-#         task = Task.objects.get(id=1)
-#     except Task.DoesNotExist:
-#         return JsonResponse({'error': 'Task not found'}, status=404)
+    def patch(self,request):
+        data=request.data
+        if not data.get('id'):
+            return Response({
+                'message':'data not updated',
+                'errors':'id is required'
+            })
+        details=Task.objects.get(id=data.get('id'))
+        serializer=TaskSerializer(details,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'msg':'data updated',
+                'data':serializer.data
+            })
+        else:
+            return Response({
+                'msg':'data is not valid',
+                'errors':'data validation failed'
+            })
+        
     
-#     serializer = TaskSerializer(task)
-#     # Directly return the data serialized by DRF serializer
-#     return JsonResponse(serializer.data)
-
-# from django.http import JsonResponse
-
-# def student_create(request):
-#     if request.method == 'POST':
-#         json_data = request.body
-#         stream = io.BytesIO(json_data)
-#         pythondata = JSONParser().parse(stream)
-#         serializer = TaskSerializer(data=pythondata)
-#         if serializer.is_valid():
-#             serializer.save()
-#             res = {'msg': 'Data created successfully'}
-#             return JsonResponse(res)  # Return JSON response directly
-#         else:
-#             # Return errors if the data is invalid
-#             return JsonResponse(serializer.errors, status=400)
-    
-#     # Handle non-POST requests (optional, depending on your requirements)
-#     return JsonResponse({'error': 'Invalid request method'}, status=405)
+    def delete(self,request):
+        data=request.data
+        if not data.get('id'):
+            return Response({
+                'msg':'data is not deleted',
+                'errors':'id is needed'
+            })
+        details=Task.objects.get(id=data.get('id')).delete()
+        return Response({'msg':'data id deleted','data':{}})
 
 
-
-# def Class_Info(request):
-#     tasks = Class.objects.all()
-#     serializer = ClassSerializer(tasks, many=True)  # Use many=True for lists
-#     return JsonResponse(serializer.data, safe=False)
 
 
 
