@@ -1,7 +1,0 @@
-*.log
-*.pot
-*.pyc
-setting.py
-urls.py
-db.sqlite3
-__pycache__/
