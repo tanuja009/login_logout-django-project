@@ -138,7 +138,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER ='tapatidar@bestpeers.com'
-EMAIL_HOST_PASSWORD ='psrx lrsq ksfn jguq'
+EMAIL_HOST_PASSWORD ='pjsw wvdu kyia vxnz'
 
 
 # Static files (CSS, JavaScript, Images)

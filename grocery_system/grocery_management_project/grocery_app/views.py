@@ -14,6 +14,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.mixins import LoginRequiredMixin
+import logging
 # from django.contrib import messages
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -84,14 +85,16 @@ class LoginPage(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            print(user.email)
             try:
                 send_mail(
-                    "Welcome Mail",
-                    "Welcome To Our Grocery World",
-                    settings.EMAIL_HOST_USER,  # Make sure EMAIL_HOST_USER is set in settings.py
-                    [user.email],
-                    fail_silently=False,
+                "Welcome Mail",
+                "Welcome To Our Grocery World",
+                settings.EMAIL_HOST_USER,  # Ensure this is correctly set in settings.py
+                [user.email],
+                fail_silently=False,
                 )
+                print("Email sent successfully.")
             except Exception as e:
                 return HttpResponse("error")
             return redirect('home')
@@ -168,34 +171,56 @@ class ProductSearch(LoginRequiredMixin,View):
     
     
 # @login_required(login_url='login')
-class AddCart(LoginRequiredMixin,View):
-    login_url = 'login' 
-    def post(self,request,id):
-        username=request.user
-        product=get_object_or_404(Product,id=id)
-        print(product)
-        user1=User.objects.filter(email=username.email).first()
-        cart_item, created = CartItem.objects.get_or_create(product=product,user=user1)
+class AddCart(LoginRequiredMixin, View):
+    login_url = 'login'
+
+    def post(self, request, id):
+        user = request.user  # Changed username to user for clarity
+        product = get_object_or_404(Product, id=id)  # Fetch product or return 404
+        print(f"Product: {product}")  # Debug print
+
+        # Get or create cart item
+        cart_item, created = CartItem.objects.get_or_create(product=product, user=user)
 
         if not created:
-            cart_item.quantity += 1
+            cart_item.quantity += 1  # Increment quantity if cart item exists
         else:
-            cart_item.quantity=1
-        cart_item.save()
-        items=CartItem.objects.filter(user=username)
-        total_price = sum(item.product.price * item.quantity for item in items)  
-        return render(request, 'cart.html', {'items': items, 'total_price': total_price}) 
-    
+            cart_item.quantity = 1  # Set quantity to 1 for new cart item
+        
+        cart_item.save()  # Save the cart item
 
-class CartView(LoginRequiredMixin,View):
-    login_url = 'login'
-    def get(self,request):
-        username=request.user
-        items=CartItem.objects.filter(user=username)
-        categories=category.objects.all()
-        shipping_charge=70
+        # Fetch all items in the user's cart and calculate total price
+        items = CartItem.objects.filter(user=user)
         total_price = sum(item.product.price * item.quantity for item in items)
-        return render(request, 'cart.html', {'items': items, 'total_price': total_price, "categories":categories,'shipping_charge':shipping_charge}) 
+
+        # Render the cart template with updated cart items and total price
+        return render(request, 'cart.html', {
+            'items': items,
+            'total_price': total_price
+        })
+
+class CartView(LoginRequiredMixin, View):
+    login_url = 'login'
+
+    def get(self, request):
+        try:
+            username = request.user
+            print(f"Username: {username}")  # Debug print
+            items = CartItem.objects.filter(user=username)
+            print(f"Items: {items}")  # Debug print
+            categories = category.objects.all()
+            shipping_charge = 70
+            total_price = sum(item.product.price * item.quantity for item in items)
+            print(f"Total Price: {total_price}")  # Debug print
+            return render(request, 'cart.html', {
+                'items': items,
+                'total_price': total_price,
+                'categories': categories,
+                'shipping_charge': shipping_charge
+            })
+        except Exception as e:
+            logging.error(f"Error in CartView: {e}")
+            return HttpResponse(f"Error: {e}")
 
 class DeleteCartItem(LoginRequiredMixin,View):
     login_url = 'login'
@@ -253,10 +278,11 @@ class EditProfile(LoginRequiredMixin,View):
            
 
 
-class Delete(LoginRequiredMixin,View):
+class Delete(LoginRequiredMixin, View):
     login_url = 'login'
-    def get(request,id):
-        user=User.objects.get(id=id)
+
+    def get(self, request, id):
+        user = User.objects.get(id=id)
         user.delete()
         return redirect('home')
 
@@ -316,7 +342,7 @@ class PaymentModule(View):
                                 'product_data': {
                                     'name': product.product_name,  # Accessing product name correctly
                                 },
-                                'unit_amount': int(product.price * 100)+shipping_charge,  # Amount in paise (INR)
+                                'unit_amount': int(product.price * 100)+(shipping_charge*100),  # Amount in paise (INR)
                             },
                             'quantity': 1,
                         }],
@@ -349,7 +375,7 @@ class PaymentModule(View):
                                 'product_data': {
                                     'name': product.product_name,
                                 },
-                                'unit_amount': int(product.price * 100)+shipping_charge ,
+                                'unit_amount': int(product.price * 100)+(shipping_charge*100) ,
                             },
                             'quantity': item.quantity,  # Assuming CartItem has a quantity field
                         })
